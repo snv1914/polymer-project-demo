@@ -9,44 +9,47 @@
  */
 
 /*
-Login component - used to authenticate user and proceeds through application
+Payment component - used to make payment of dth/mobile/electricity services
 */
-
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import './shared-styles.js';
 
 class MyPayment extends PolymerElement {
-  static get properties() {
-    return {
-	  mainErrorMessage: {
-		  type: String,
-		  value: ''
-	  },
-	  users: {	/* gets users from my-app.js */
-		  type: Object,
-		  value: {},
-		  notify: true
-	  },
-	  transactions: {	/* gets transactions from my-app.js */
-		  type: Array,
-		  value: [],
-		  notify: true
-	  },
-	  loggedInUserDetails: { /* gets loggedin user details from my-app.js */
-		  type: Object,
-		  value: {},
-		  notify: true
-	  },
-	  currentRunningService: { /* gets current running service from my-app.js */
-		  type: Object,
-		  value: {},
-		  notify: true
-	  }
-    };
-  }
-  
-  static get template() {
-    return html`
+	static get properties() {
+		return {
+			mainErrorMessage: {
+				type: String,
+				value: ''
+			},
+			users: {
+				/* gets users from my-app.js */
+				type: Object,
+				value: {},
+				notify: true
+			},
+			transactions: {
+				/* gets transactions from my-app.js */
+				type: Array,
+				value: [],
+				notify: true
+			},
+			loggedInUserDetails: {
+				/* gets loggedin user details from my-app.js */
+				type: Object,
+				value: {},
+				notify: true
+			},
+			currentRunningService: {
+				/* gets current running service from my-app.js */
+				type: Object,
+				value: {},
+				notify: true
+			}
+		};
+	}
+
+	static get template() {
+		return html`
       <style include="shared-styles">
         :host {
           display: block;
@@ -75,12 +78,12 @@ class MyPayment extends PolymerElement {
 		  </div>
       </div>
     `;
-  }
-  
-  
-  // deduct balance
+	}
+
+
+	// deduct balance
 	deductBalance(amount) {
-		if(this.loggedInUserDetails.wallet.balance >= amount) {
+		if (this.loggedInUserDetails.wallet.balance >= amount) {
 			this.loggedInUserDetails.wallet.balance -= amount;
 			this.notifyPath('loggedInUserDetails.wallet.balance');
 			return true;
@@ -88,15 +91,15 @@ class MyPayment extends PolymerElement {
 			return false;
 		}
 	}
-	
+
 	// update user balance based on payment
 	updateBalance(amount) {
 		// checks if user is logged in(using this.loggedInUserDetails) and adds amount to logged in user object and updates this.users and sessionStorage.usersList data
-		if(this.loggedInUserDetails) {
+		if (this.loggedInUserDetails) {
 			// update user data with wallet balance and save to sessionStorage
 			let updatedUsersData = this.users.map((user) => {
 				// checks the user is logged in user from array and updates wallet balance to that user
-				if(user.email === this.loggedInUserDetails.email) {
+				if (user.email === this.loggedInUserDetails.email) {
 					user.wallet.balance = parseInt(amount);
 					// this.loggedInUserDetails.wallet.balance = user.wallet.balance;	// updates user at my-app.js
 					// this.notifyPath('loggedInUserDetails.wallet.balance');
@@ -127,7 +130,7 @@ class MyPayment extends PolymerElement {
 			  return false;
 		  }
 		  */
-		  
+
 		/*
 		amount, service, provider, userId, serviceUniqueId
 		*/
@@ -136,20 +139,27 @@ class MyPayment extends PolymerElement {
 		const serviceUniqueId = this.currentRunningService.serviceUniqueId;
 		const amount = this.currentRunningService.amount;
 		const userId = this.loggedInUserDetails.id;
-		if(this.deductBalance(amount)) {
+		if (this.deductBalance(amount)) {
 			// update transactions
 			/*=======================================*/
 			// update transactions array
-			this.transactions.push({"id": this.transactions.length, "service": service, "provider": provider, "userId": userId, "serviceUniqueId": serviceUniqueId, "amount": amount});
+			this.transactions.push({
+				"id": this.transactions.length,
+				"service": service,
+				"provider": provider,
+				"userId": userId,
+				"serviceUniqueId": serviceUniqueId,
+				"amount": amount
+			});
 			// update sessionStorage.transactions array
-			 sessionStorage.setItem("transactions", window.btoa(JSON.stringify(this.transactions)));
+			sessionStorage.setItem("transactions", window.btoa(JSON.stringify(this.transactions)));
 			/*=======================================*/
-			 
-			 // update current user balance amount to this.users array and also save to sessionStorage
-			 /*=======================================*/
-			 this.updateBalance(this.loggedInUserDetails.wallet.balance);
-			 /*=======================================*/
-			 
+
+			// update current user balance amount to this.users array and also save to sessionStorage
+			/*=======================================*/
+			this.updateBalance(this.loggedInUserDetails.wallet.balance);
+			/*=======================================*/
+
 			// console.log("Payment done");
 			this.currentRunningService = {}; // clear currentRunningService data after payment
 			// continue to dashboard page
@@ -158,7 +168,7 @@ class MyPayment extends PolymerElement {
 			this.mainErrorMessage = "Insufficient balance. Please add amount to wallet";
 		}
 	}
-	
+
 }
 
 window.customElements.define('my-payment', MyPayment);

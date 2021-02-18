@@ -9,25 +9,25 @@
  */
 
 /*
-Login component - used to authenticate user and proceeds through application
+Transactions component - used to show current user transactions
 */
-
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import './shared-styles.js';
 
 class MyTransactions extends PolymerElement {
-  static get properties() {
-    return {
-	  userTransactions: {	/* gets current user transactions list from my-app.js */
-		  type: Array,
-		  value: [],
-		  notify: true
-	  }
-    };
-  }
-  
-  static get template() {
-    return html`
+	static get properties() {
+		return {
+			userTransactions: {
+				/* gets current user transactions list from my-app.js */
+				type: Array,
+				value: [],
+				notify: true
+			}
+		};
+	}
+
+	static get template() {
+		return html`
       <style include="shared-styles">
         :host {
           display: block;
@@ -104,7 +104,7 @@ class MyTransactions extends PolymerElement {
 		</div>
       </div>
     `;
-  }
+	}
 }
 
 window.customElements.define('my-transactions', MyTransactions);

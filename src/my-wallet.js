@@ -9,37 +9,38 @@
  */
 
 /*
-Login component - used to authenticate user and proceeds through application
+Wallet component - used to see wallet balance and add amount to wallet balance
 */
-
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import './shared-styles.js';
 
 class MyWallet extends PolymerElement {
-  static get properties() {
-    return {
-	  amount: {
-		  type: Number
-	  },
-	  amountErrorMessage: {
-		  type: String,
-		  value: ''
-	  },
-	  users: {	/* gets user loginin status from my-app.js */
-		  type: Object,
-		  value: {},
-		  notify: true
-	  },
-	  loggedInUserDetails: { /* gets loggedin user details from my-app.js */
-		  type: Object,
-		  value: {},
-		  notify: true
-	  }
-    };
-  }
-  
-  static get template() {
-    return html`
+	static get properties() {
+		return {
+			amount: {
+				type: Number
+			},
+			amountErrorMessage: {
+				type: String,
+				value: ''
+			},
+			users: {
+				/* gets user loginin status from my-app.js */
+				type: Object,
+				value: {},
+				notify: true
+			},
+			loggedInUserDetails: {
+				/* gets loggedin user details from my-app.js */
+				type: Object,
+				value: {},
+				notify: true
+			}
+		};
+	}
+
+	static get template() {
+		return html`
       <style include="shared-styles">
         :host {
           display: block;
@@ -53,6 +54,7 @@ class MyWallet extends PolymerElement {
       <div class="form-container">
 		  <div class="card">
 			<h1>MyWallet</h1>
+			
 			<paper-input type="text" always-float-label label="Amount" value="{{amount}}"></paper-input>
 			<template is="dom-if" if="[[amountErrorMessage]]">
 				<span class="error-validation">{{amountErrorMessage}}</span>
@@ -62,29 +64,29 @@ class MyWallet extends PolymerElement {
 		  </div>
       </div>
     `;
-  }
-  
-  // add balance to wallet
+	}
+
+	// add balance to wallet
 	addBalance() {
 		// reset error data
 		this.amountErrorMessage = '';
-		
+
 		// amount validation
 		let numbers = /^[-+]?[0-9]+$/;
-		if(this.amount.trim() === "" || !this.amount.match(numbers)) {
+		if (this.amount.trim() === "" || !this.amount.match(numbers)) {
 			this.amountErrorMessage = 'Please enter amount';
 			return false;
 		}
-		
+
 		// checks if user is logged in(using this.loggedInUserDetails) and adds amount to logged in user object and updates this.users and sessionStorage.usersList data
-		if(this.loggedInUserDetails) {
+		if (this.loggedInUserDetails) {
 			// update user data with wallet balance and save to sessionStorage
 			let updatedUsersData = this.users.map((user) => {
 				// checks the user is logged in user from array and updates wallet balance to that user
-				if(user.email === this.loggedInUserDetails.email) {
+				if (user.email === this.loggedInUserDetails.email) {
 					user.wallet.balance = parseInt(user.wallet.balance) + parseInt(this.amount);
 					// this.loggedInUserDetails = user;	// updates user at my-app.js
-					this.loggedInUserDetails.wallet.balance = user.wallet.balance;	// updates user at my-app.js
+					this.loggedInUserDetails.wallet.balance = user.wallet.balance; // updates user at my-app.js
 					// this.set('loggedInUserDetails.wallet.balance', user.wallet.balance);
 					this.notifyPath('loggedInUserDetails.wallet.balance');
 				}
@@ -94,7 +96,7 @@ class MyWallet extends PolymerElement {
 			this.users = updatedUsersData;
 			// updates sessionStorage.usersList
 			sessionStorage.setItem("usersList", window.btoa(JSON.stringify(this.users)));
-			
+
 			// reset data
 			this.amount = '';
 		} else {
@@ -102,7 +104,7 @@ class MyWallet extends PolymerElement {
 			this.set('route.path', '/login');
 		}
 	}
-  
+
 
 }
 

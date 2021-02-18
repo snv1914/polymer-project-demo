@@ -9,25 +9,25 @@
  */
 
 /*
-Login component - used to authenticate user and proceeds through application
+Profile component - used to show user profile data
 */
-
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import './shared-styles.js';
 
 class MyProfile extends PolymerElement {
-  static get properties() {
-    return {
-	  loggedInUserDetails: { /* gets loggedin user details from my-app.js */
-		  type: Object,
-		  value: {},
-		  notify: true
-	  }
-    };
-  }
-  
-  static get template() {
-    return html`
+	static get properties() {
+		return {
+			loggedInUserDetails: {
+				/* gets loggedin user details from my-app.js */
+				type: Object,
+				value: {},
+				notify: true
+			}
+		};
+	}
+
+	static get template() {
+		return html`
       <style include="shared-styles">
         :host {
           display: block;
@@ -46,7 +46,7 @@ class MyProfile extends PolymerElement {
 		  </div>
       </div>
     `;
-  }
+	}
 }
 
 window.customElements.define('my-profile', MyProfile);

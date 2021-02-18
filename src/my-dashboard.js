@@ -9,21 +9,20 @@
  */
 
 /*
-Login component - used to authenticate user and proceeds through application
+Dashboard component - used to show avaible services at this aplication
 */
-
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import './shared-styles.js';
 
 class MyDashboard extends PolymerElement {
-  static get properties() {
-    return {
-	  
-    };
-  }
-  
-  static get template() {
-    return html`
+	static get properties() {
+		return {
+
+		};
+	}
+
+	static get template() {
+		return html`
       <style include="shared-styles">
         :host {
           display: block;
@@ -42,22 +41,22 @@ class MyDashboard extends PolymerElement {
 		</div>
       </div>
     `;
-  }
-  
-  // open dth page
-  dth(){
-	  this.set('route.path', '/dth');
-  }
-  // open mobile recharge page
-  mobileRecharge(){
-	  this.set('route.path', '/mobile');
-  }
-  // open dth page
-  electricity(){
-	  this.set('route.path', '/electricity');
-  }
-  
-  
+	}
+
+	// open dth page
+	dth() {
+		this.set('route.path', '/dth');
+	}
+	// open mobile recharge page
+	mobileRecharge() {
+		this.set('route.path', '/mobile');
+	}
+	// open dth page
+	electricity() {
+		this.set('route.path', '/electricity');
+	}
+
+
 }
 
 window.customElements.define('my-dashboard', MyDashboard);

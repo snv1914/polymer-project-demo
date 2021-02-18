@@ -11,7 +11,6 @@
 /*
 Login component - used to authenticate user and proceeds through application
 */
-
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import {} from '@polymer/polymer/lib/elements/dom-if.js';
 import '@polymer/paper-input/paper-input.js';
@@ -20,47 +19,50 @@ import '@polymer/app-route/app-route.js';
 import './shared-styles.js';
 
 class MyLogin extends PolymerElement {
-  static get properties() {
-    return {
-	  email: {
-		  type: String,
-		  value: ''
-	  },
-	  emailErrorMessage: {
-		  type: String,
-		  value: ''
-	  },
-	  password: {
-		  type: String,
-		  value: ''
-	  },
-	  passwordErrorMessage: {
-		  type: String,
-		  value: ''
-	  },
-	  mainErrorMessage: {
-		  type: String,
-		  value: ''
-	  },
-	  users: {	/* gets users list from my-app.js to verify user existed or not */
-		  type: Object,
-		  value: {}
-	  },
-	  userLoggedInStatus: {	/* gets status from my-app.js and send back status to my-app.js after user logged in to application */
-		  type: Boolean,
-		  value: false,
-		  notify: true
-	  },
-	  loggedInUserDetails: { /* gets loggedin user details from my-app.js and send back loggedin user details to my-app.js after user logged in to application */
-		  type: Object,
-		  value: {},
-		  notify: true
-	  }
-    };
-  }
-  
-  static get template() {
-    return html`
+	static get properties() {
+		return {
+			email: {
+				type: String,
+				value: ''
+			},
+			emailErrorMessage: {
+				type: String,
+				value: ''
+			},
+			password: {
+				type: String,
+				value: ''
+			},
+			passwordErrorMessage: {
+				type: String,
+				value: ''
+			},
+			mainErrorMessage: {
+				type: String,
+				value: ''
+			},
+			users: {
+				/* gets users list from my-app.js to verify user existed or not */
+				type: Object,
+				value: {}
+			},
+			userLoggedInStatus: {
+				/* gets status from my-app.js and send back status to my-app.js after user logged in to application */
+				type: Boolean,
+				value: false,
+				notify: true
+			},
+			loggedInUserDetails: {
+				/* gets loggedin user details from my-app.js and send back loggedin user details to my-app.js after user logged in to application */
+				type: Object,
+				value: {},
+				notify: true
+			}
+		};
+	}
+
+	static get template() {
+		return html`
       <style include="shared-styles">
         :host {
           display: block;
@@ -89,55 +91,55 @@ class MyLogin extends PolymerElement {
 		  </div>
       </div>
     `;
-  }
-  
-  // login function
-  login() {
-	  // reset error data
-	  this.emailErrorMessage = '';
-	  this.passwordErrorMessage = '';
-	  this.mainErrorMessage = '';
-	  
-	  // validate login data
-	  // email validation
-	  let reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-	  if (reg.test(this.email) == false) 
-	  {
-		  this.emailErrorMessage = "Please enter valid email address";
-		  return false;
-	  }
-	  // password validation
-	  if (this.password.trim() === "") 
-	  {
-		  this.passwordErrorMessage = "Password is required";
-		  return false;
-	  }
-	  
-	  // filter user based on users data
-	  let user = this.users.filter((user) => {
-		  if(this.email === user.email && this.password === user.password) {
-			  return true;
-		  }
-	  });
-	  if(user.length > 0) { /* if user is existed, then set user details and login status and then save to sessionStorage */
-		  this.userLoggedInStatus = true;
-		  this.loggedInUserDetails = user[0];
-		  sessionStorage.setItem("user", window.btoa(JSON.stringify(this.loggedInUserDetails)));
-		  
-		  // reset data
-		  this.email = '';
-		  this.password = '';
-		  this.emailErrorMessage = '';
-		  this.passwordErrorMessage = '';
-		  this.mainErrorMessage = '';
-		  
-		  // go to dashboard page
-		  this.set('route.path', '/dashboard');
-	  } else { /* if user is not existed, then show error message */
-		  this.mainErrorMessage = 'Please check your credentials';
-	  }
-	  
-  }
+	}
+
+	// login function
+	login() {
+		// reset error data
+		this.emailErrorMessage = '';
+		this.passwordErrorMessage = '';
+		this.mainErrorMessage = '';
+
+		// validate login data
+		// email validation
+		let reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+		if (reg.test(this.email) == false) {
+			this.emailErrorMessage = "Please enter valid email address";
+			return false;
+		}
+		// password validation
+		if (this.password.trim() === "") {
+			this.passwordErrorMessage = "Password is required";
+			return false;
+		}
+
+		// filter user based on users data
+		let user = this.users.filter((user) => {
+			if (this.email === user.email && this.password === user.password) {
+				return true;
+			}
+		});
+		if (user.length > 0) {
+			/* if user is existed, then set user details and login status and then save to sessionStorage */
+			this.userLoggedInStatus = true;
+			this.loggedInUserDetails = user[0];
+			sessionStorage.setItem("user", window.btoa(JSON.stringify(this.loggedInUserDetails)));
+
+			// reset data
+			this.email = '';
+			this.password = '';
+			this.emailErrorMessage = '';
+			this.passwordErrorMessage = '';
+			this.mainErrorMessage = '';
+
+			// go to dashboard page
+			this.set('route.path', '/dashboard');
+		} else {
+			/* if user is not existed, then show error message */
+			this.mainErrorMessage = 'Please check your credentials';
+		}
+
+	}
 }
 
 window.customElements.define('my-login', MyLogin);

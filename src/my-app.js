@@ -7,7 +7,6 @@
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
- 
 var appConfig = {
 	"appTitle": "Services System",
 	"appHeaderName": "Payment Services",
@@ -25,8 +24,7 @@ var appConfig = {
 			"providers": ["CESS Ltd", "TSNPDCL", "TSSPDCL"]
 		}
 	},
-	"users" : [
-		{
+	"users": [{
 			"id": 1,
 			"email": "admin@gmail.com",
 			"password": "password",
@@ -104,45 +102,45 @@ setPassiveTouchGestures(true);
 setRootPath(MyAppGlobals.rootPath);
 
 class MyApp extends PolymerElement {
-  constructor(){
-	  super();
-	  
-	  // get/set users list from/to sessionStorage on load
-	  if(sessionStorage.usersList) {
-		  // if usersList exists, then replacing this.appConfig.users data with sessionStorage data (getting from sessionStorage.usersList)
-		  this.appConfig.users = JSON.parse(window.atob(sessionStorage.getItem("usersList")));
-	  } else {
-		  // at default if usersList item not exists, setting this.appConfig.users data to sessionStorage.usersList to get for future use
-		  sessionStorage.setItem("usersList", window.btoa(JSON.stringify(this.appConfig.users)));
-	  }
-	  
-	  // get/set users transactions from/to sessionStorage on load
-	  if(sessionStorage.transactions) {
-		  // if transactions exists, then replacing this.appConfig.transactions data with sessionStorage data (getting from sessionStorage.transactions)
-		  this.appConfig.transactions = JSON.parse(window.atob(sessionStorage.getItem("transactions")));
-	  } else {
-		  // at default if transactions item not exists, setting this.appConfig.transactions data to sessionStorage.transactions to get for future use
-		  sessionStorage.setItem("transactions", window.btoa(JSON.stringify(this.appConfig.transactions)));
-	  }
-	  
-	  // get userdata from session storage if user is logged into application
-	  this.userLoggedInStatus = false;
-	  if(sessionStorage.user) {
-		  this.loggedInUserDetails = JSON.parse(window.atob(sessionStorage.user));
-		  // map and get updated user data from sessionStorage
-		  if(sessionStorage.usersList) {
-			  let userData = this.appConfig.users.filter((user) => {
-				  if(user.email === this.loggedInUserDetails.email){
-					  this.loggedInUserDetails = user;
-					  this.userLoggedInStatus = true;
-				  }
-			  });
-		  }
-	  }
-  }
-  
-  static get template() {
-    return html`
+	constructor() {
+		super();
+
+		// get/set users list from/to sessionStorage on load
+		if (sessionStorage.usersList) {
+			// if usersList exists, then replacing this.appConfig.users data with sessionStorage data (getting from sessionStorage.usersList)
+			this.appConfig.users = JSON.parse(window.atob(sessionStorage.getItem("usersList")));
+		} else {
+			// at default if usersList item not exists, setting this.appConfig.users data to sessionStorage.usersList to get for future use
+			sessionStorage.setItem("usersList", window.btoa(JSON.stringify(this.appConfig.users)));
+		}
+
+		// get/set users transactions from/to sessionStorage on load
+		if (sessionStorage.transactions) {
+			// if transactions exists, then replacing this.appConfig.transactions data with sessionStorage data (getting from sessionStorage.transactions)
+			this.appConfig.transactions = JSON.parse(window.atob(sessionStorage.getItem("transactions")));
+		} else {
+			// at default if transactions item not exists, setting this.appConfig.transactions data to sessionStorage.transactions to get for future use
+			sessionStorage.setItem("transactions", window.btoa(JSON.stringify(this.appConfig.transactions)));
+		}
+
+		// get userdata from session storage if user is logged into application
+		this.userLoggedInStatus = false;
+		if (sessionStorage.user) {
+			this.loggedInUserDetails = JSON.parse(window.atob(sessionStorage.user));
+			// map and get updated user data from sessionStorage
+			if (sessionStorage.usersList) {
+				let userData = this.appConfig.users.filter((user) => {
+					if (user.email === this.loggedInUserDetails.email) {
+						this.loggedInUserDetails = user;
+						this.userLoggedInStatus = true;
+					}
+				});
+			}
+		}
+	}
+
+	static get template() {
+		return html`
       <style>
         :host {
           --app-primary-color: #4285f4;
@@ -253,133 +251,137 @@ class MyApp extends PolymerElement {
         </app-header-layout>
       </app-drawer-layout>
     `;
-  }
+	}
 
-  static get properties() {
-    return {
-      page: {
-        type: String,
-        reflectToAttribute: true,
-        observer: '_pageChanged'
-      },
-	  appConfig: {
-		  type: Object,
-		  value: appConfig
-	  },
-	  userTransactions: {
-		  type: Array,
-		  value: []
-	  },
-	  userLoggedInStatus: {
-		  type: Boolean,
-		  value: false
-	  },
-	  loggedInUserDetails: {
-		  type: Object,
-		  value: {}
-	  },
-	  currentRunningService: {
-		  type: Object,
-		  value: {}
-	  },
-      routeData: Object,
-      subroute: Object
-    };
-  }
+	static get properties() {
+		return {
+			page: {
+				type: String,
+				reflectToAttribute: true,
+				observer: '_pageChanged'
+			},
+			appConfig: {
+				type: Object,
+				value: appConfig
+			},
+			userTransactions: {
+				type: Array,
+				value: []
+			},
+			userLoggedInStatus: {
+				type: Boolean,
+				value: false
+			},
+			loggedInUserDetails: {
+				type: Object,
+				value: {}
+			},
+			currentRunningService: {
+				type: Object,
+				value: {}
+			},
+			routeData: Object,
+			subroute: Object
+		};
+	}
 
-  static get observers() {
-    return [
-      '_routePageChanged(routeData.page)'
-    ];
-  }
+	static get observers() {
+		return [
+			'_routePageChanged(routeData.page)'
+		];
+	}
 
-  _routePageChanged(page) {
-     // Show the corresponding page according to the route.
-     //
-     // If no page was found in the route data, page will be an empty string.
-     // Show 'login' in that case. And if the page doesn't exist, show 'view404'.
-    if (!page) {
-      this.page = 'login';
-    } else if (['login', 'register', 'transactions', 'wallet', 'profile', 'dashboard', 'payment', 'dth', 'mobile', 'electricity'].indexOf(page) !== -1) {
-      this.page = page;
-    } else {
-      this.page = 'view404';
-    }
-
-    // Close a non-persistent drawer when the page & route are changed.
-    if (!this.$.drawer.persistent) {
-      this.$.drawer.close();
-    }
-  }
-  
-  _pageChanged(page) {
-	// if user logged in and page value is login or register then load dashboard page 
-	// else user not logged in, then loading other pages(other than login, register) has tobe redirected to login page
-	if(this.userLoggedInStatus) {
-		if(page === 'login' || page === 'register') {
-			this.set('route.path', '/dashboard');
+	_routePageChanged(page) {
+		// Show the corresponding page according to the route.
+		//
+		// If no page was found in the route data, page will be an empty string.
+		// Show 'login' in that case. And if the page doesn't exist, show 'view404'.
+		if (!page) {
+			this.page = 'login';
+		} else if (['login', 'register', 'transactions', 'wallet', 'profile', 'dashboard', 'payment', 'dth', 'mobile', 'electricity'].indexOf(page) !== -1) {
+			this.page = page;
+		} else {
+			this.page = 'view404';
 		}
-	} else {
-		if(page !== 'login' && page !== 'register') {
-			this.set('route.path', '/login');
+
+		// Close a non-persistent drawer when the page & route are changed.
+		if (!this.$.drawer.persistent) {
+			this.$.drawer.close();
 		}
 	}
-	
-	// if transactions menu is clicked then execute getUserTransactions() function to get only currentuser(logged in user) transactions
-	if(page === 'transactions') {
-		this.getUserTransactions();
+
+	_pageChanged(page) {
+		// if user logged in and page value is login or register then load dashboard page 
+		// else user not logged in, then loading other pages(other than login, register) has tobe redirected to login page
+		if (this.userLoggedInStatus) {
+			if (page === 'login' || page === 'register') {
+				this.set('route.path', '/dashboard');
+			}
+		} else {
+			if (page !== 'login' && page !== 'register') {
+				this.set('route.path', '/login');
+			}
+		}
+
+		// if transactions menu is clicked then execute getUserTransactions() function to get only currentuser(logged in user) transactions
+		if (page === 'transactions') {
+			this.getUserTransactions();
+		}
+
+		// Import the page component on demand.
+		//
+		// Note: `polymer build` doesn't like string concatenation in the import
+		// statement, so break it up.
+		switch (page) {
+			case 'login':
+				import('./my-login.js');
+				break;
+			case 'register':
+				import('./my-register.js');
+				break;
+			case 'transactions':
+				import('./my-transactions.js');
+				break;
+			case 'wallet':
+				import('./my-wallet.js');
+				break;
+			case 'profile':
+				import('./my-profile.js');
+				break;
+			case 'dashboard':
+				import('./my-dashboard.js');
+				break;
+			case 'payment':
+				import('./my-payment.js');
+				break;
+			case 'dth':
+				import('./my-dth.js');
+				break;
+			case 'mobile':
+				import('./my-mobile.js');
+				break;
+			case 'electricity':
+				import('./my-electricity.js');
+				break;
+			case 'view404':
+				import('./my-view404.js');
+				break;
+		}
 	}
-	
-    // Import the page component on demand.
-    //
-    // Note: `polymer build` doesn't like string concatenation in the import
-    // statement, so break it up.
-    switch (page) {
-      case 'login':
-        import('./my-login.js');
-        break;
-      case 'register':
-        import('./my-register.js');
-        break;
-      case 'transactions':
-        import('./my-transactions.js');
-        break;
-      case 'wallet':
-        import('./my-wallet.js');
-        break;
-      case 'profile':
-        import('./my-profile.js');
-        break;
-      case 'dashboard':
-        import('./my-dashboard.js');
-        break;
-      case 'payment':
-        import('./my-payment.js');
-        break;
-      case 'dth':
-        import('./my-dth.js');
-        break;
-      case 'mobile':
-        import('./my-mobile.js');
-        break;
-      case 'electricity':
-        import('./my-electricity.js');
-        break;
-      case 'view404':
-        import('./my-view404.js');
-        break;
-    }
-  }
-  
-  
-    // get currentuser transactions and set to this.userTransactions property
+
+
+	// get currentuser transactions and set to this.userTransactions property
 	getUserTransactions() {
-		this.userTransactions = this.appConfig.transactions.filter((transaction) => { if(transaction.userId === this.loggedInUserDetails.id) { return true; }});	// filter current user transactions from this.appConfig.transactions array
+		this.userTransactions = this.appConfig.transactions.filter((transaction) => {
+			if (transaction.userId === this.loggedInUserDetails.id) {
+				return true;
+			}
+		}); // filter current user transactions from this.appConfig.transactions array
 		// console.log(this.userTransactions);
 	}
-	
 
-	
+
+
 	/*
   
   // payment to service
@@ -402,16 +404,16 @@ class MyApp extends PolymerElement {
 	  console.log(e);
   }
   */
-  
-  // logout
-  logout() {
-	  this.loggedInUserDetails = {};
-	  this.userLoggedInStatus = false;
-	  sessionStorage.removeItem("user");
-	  this.set('route.path', '/login');
-  }
-  
-  
+
+	// logout
+	logout() {
+		this.loggedInUserDetails = {};
+		this.userLoggedInStatus = false;
+		sessionStorage.removeItem("user");
+		this.set('route.path', '/login');
+	}
+
+
 }
 
 window.customElements.define('my-app', MyApp);
