@@ -380,31 +380,6 @@ class MyApp extends PolymerElement {
 		// console.log(this.userTransactions);
 	}
 
-
-
-	/*
-  
-  // payment to service
-  payToService(e) {
-	  console.log(e);
-  }
-  
-  // update wallet balance
-  updateWalletBalance(e) {
-	  console.log(e);
-  }
-  
-  // update users data to sessionStorage and appConfig users array
-  updateUsers(e) {
-	  console.log(e);
-  }
-  
-  // update transactions data to sessionStorage and appConfig transactions array
-  updateTransactions(e) {
-	  console.log(e);
-  }
-  */
-
 	// logout
 	logout() {
 		this.loggedInUserDetails = {};

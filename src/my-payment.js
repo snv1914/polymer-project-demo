@@ -101,8 +101,6 @@ class MyPayment extends PolymerElement {
 				// checks the user is logged in user from array and updates wallet balance to that user
 				if (user.email === this.loggedInUserDetails.email) {
 					user.wallet.balance = parseInt(amount);
-					// this.loggedInUserDetails.wallet.balance = user.wallet.balance;	// updates user at my-app.js
-					// this.notifyPath('loggedInUserDetails.wallet.balance');
 				}
 				return user;
 			});
@@ -110,10 +108,7 @@ class MyPayment extends PolymerElement {
 			this.users = updatedUsersData;
 			// updates sessionStorage.usersList
 			sessionStorage.setItem("usersList", window.btoa(JSON.stringify(this.users)));
-			// this.wallet.balance = this.wallet.balance + amount;
-			// return {"status": 1, "message": "Amount updated to wallet"};
 		} else {
-			// return {"status": 0, "message": "Please login to continue"};
 			this.mainErrorMessage = "Please login to continue";
 		}
 	}
@@ -122,14 +117,6 @@ class MyPayment extends PolymerElement {
 	payToService() {
 		// reset error messages:
 		this.mainErrorMessage = '';
-		/*
-		if(parseInt(this.currentRunningService.amount) <= this.loggedInUserDetails.wallet.balance) {
-			  
-		  } else {
-			  this.mainErrorMessage = 'Insufficient balance. Please add amount to wallet';
-			  return false;
-		  }
-		  */
 
 		/*
 		amount, service, provider, userId, serviceUniqueId
