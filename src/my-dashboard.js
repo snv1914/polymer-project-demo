@@ -51,7 +51,7 @@ class MyDashboard extends PolymerElement {
 	mobileRecharge() {
 		this.set('route.path', '/mobile');
 	}
-	// open dth page
+	// open electricity page
 	electricity() {
 		this.set('route.path', '/electricity');
 	}
