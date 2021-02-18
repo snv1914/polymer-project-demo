@@ -58,15 +58,6 @@ class MyMobile extends PolymerElement {
 		  type: String,
 		  value: ''
 	  },
-	  userLoggedInStatus: {	/* gets user loginin status from my-app.js */
-		  type: Boolean,
-		  value: false
-	  },
-	  loggedInUserDetails: { /* gets loggedin user details from my-app.js */
-		  type: Object,
-		  value: {},
-		  notify: true
-	  },
 	  currentRunningService: { /* notifies current running service to my-app.js */
 		  type: Object,
 		  value: {},

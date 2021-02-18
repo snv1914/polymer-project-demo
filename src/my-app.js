@@ -180,6 +180,12 @@ class MyApp extends PolymerElement {
           color: black;
           font-weight: bold;
         }
+		
+		.header-user-info {
+		  width: 100%;
+		  font-size: 12px;
+		  padding: 15px;
+		}
       </style>
 
       <app-location route="{{route}}" url-space-regex="^[[rootPath]]">
@@ -198,11 +204,19 @@ class MyApp extends PolymerElement {
 				<a name="register" href="[[rootPath]]register">Register</a>
 			</template>
 			<template is="dom-if" if="[[loggedInUserDetails.email]]">
+				<div class="header-user-info">
+					Email: {{loggedInUserDetails.email}}
+					<br/>
+					Wallet balance: Rs. {{loggedInUserDetails.wallet.balance}}
+				</div>
+
 				<a name="transactions" href="[[rootPath]]transactions">Transactions</a>
 				<a name="dashboard" href="[[rootPath]]dashboard">Dashboard</a>
 				<a name="wallet" href="[[rootPath]]wallet">Wallet</a>
 				<a name="profile" href="[[rootPath]]profile">Profile</a>
-				<a name="payment" href="[[rootPath]]payment">Payment</a>
+				<template is="dom-if" if="[[currentRunningService.service]]">
+					<a name="payment" href="[[rootPath]]payment">Payment</a>
+				</template>
 				<!--
 				<a name="dth" href="[[rootPath]]dth">Dth</a>
 				<a name="mobile" href="[[rootPath]]mobile">Mobile</a>
@@ -223,20 +237,17 @@ class MyApp extends PolymerElement {
             </app-toolbar>
           </app-header>
 
-		  {{loggedInUserDetails.email}}
-		  {{userLoggedInStatus}}
-		  {{loggedInUserDetails.wallet.balance}}
           <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
             <my-login users="{{appConfig.users}}" user-logged-in-status="{{userLoggedInStatus}}" logged-in-user-details="{{loggedInUserDetails}}" name="login"></my-login>
             <my-register users="{{appConfig.users}}" name="register"></my-register>
-            <my-transactions user-transactions="{{userTransactions}}" user-logged-in-status="{{userLoggedInStatus}}" logged-in-user-details="{{loggedInUserDetails}}" name="transactions"></my-transactions>
+            <my-transactions user-transactions="{{userTransactions}}" name="transactions"></my-transactions>
             <my-wallet users="{{appConfig.users}}" logged-in-user-details="{{loggedInUserDetails}}" name="wallet"></my-wallet>
-            <my-profile user-logged-in-status="{{userLoggedInStatus}}" logged-in-user-details="{{loggedInUserDetails}}" name="profile"></my-profile>
+            <my-profile logged-in-user-details="{{loggedInUserDetails}}" name="profile"></my-profile>
             <my-dashboard name="dashboard"></my-dashboard>
-            <my-payment transactions="{{appConfig.transactions}}" users="{{appConfig.users}}" current-running-service="{{currentRunningService}}" user-logged-in-status="{{userLoggedInStatus}}" logged-in-user-details="{{loggedInUserDetails}}" name="payment"></my-payment>
-            <my-dth current-running-service="{{currentRunningService}}" services="{{appConfig.services}}" user-logged-in-status="{{userLoggedInStatus}}" logged-in-user-details="{{loggedInUserDetails}}" name="dth"></my-dth>
-            <my-mobile current-running-service="{{currentRunningService}}" services="{{appConfig.services}}" user-logged-in-status="{{userLoggedInStatus}}" logged-in-user-details="{{loggedInUserDetails}}" name="mobile"></my-mobile>
-            <my-electricity current-running-service="{{currentRunningService}}" services="{{appConfig.services}}" user-logged-in-status="{{userLoggedInStatus}}" logged-in-user-details="{{loggedInUserDetails}}" name="electricity"></my-electricity>
+            <my-payment transactions="{{appConfig.transactions}}" users="{{appConfig.users}}" current-running-service="{{currentRunningService}}" logged-in-user-details="{{loggedInUserDetails}}" name="payment"></my-payment>
+            <my-dth current-running-service="{{currentRunningService}}" services="{{appConfig.services}}" name="dth"></my-dth>
+            <my-mobile current-running-service="{{currentRunningService}}" services="{{appConfig.services}}" name="mobile"></my-mobile>
+            <my-electricity current-running-service="{{currentRunningService}}" services="{{appConfig.services}}" name="electricity"></my-electricity>
             <my-view404 name="view404"></my-view404>
           </iron-pages>
         </app-header-layout>
@@ -314,7 +325,7 @@ class MyApp extends PolymerElement {
 		}
 	}
 	
-	// if transactions menu is clicked then execute getUserTransactions() function to get currentuser transactions
+	// if transactions menu is clicked then execute getUserTransactions() function to get only currentuser(logged in user) transactions
 	if(page === 'transactions') {
 		this.getUserTransactions();
 	}

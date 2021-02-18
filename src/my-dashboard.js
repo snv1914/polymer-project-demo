@@ -18,15 +18,7 @@ import './shared-styles.js';
 class MyDashboard extends PolymerElement {
   static get properties() {
     return {
-	  userLoggedInStatus: {	/* gets user loginin status from my-app.js */
-		  type: Boolean,
-		  value: false
-	  },
-	  loggedInUserDetails: { /* gets loggedin user details from my-app.js */
-		  type: Object,
-		  value: {},
-		  notify: true
-	  }
+	  
     };
   }
   

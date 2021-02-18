@@ -32,10 +32,6 @@ class MyPayment extends PolymerElement {
 		  value: [],
 		  notify: true
 	  },
-	  userLoggedInStatus: {	/* gets user loginin status from my-app.js */
-		  type: Boolean,
-		  value: false
-	  },
 	  loggedInUserDetails: { /* gets loggedin user details from my-app.js */
 		  type: Object,
 		  value: {},
@@ -70,7 +66,9 @@ class MyPayment extends PolymerElement {
 			<paper-input type="text" always-float-label label="Service provider" disabled="disabled" value="[[currentRunningService.serviceProvider]]"></paper-input>
 			<paper-input type="text" always-float-label label="Id" disabled="disabled" value="[[currentRunningService.serviceUniqueId]]"></paper-input>
 			<paper-input type="text" always-float-label label="Amount" disabled="disabled" value="[[currentRunningService.amount]]"></paper-input>
-			<paper-button raised class="indigo" on-click="payToService">Make payment</paper-button>
+			<template is="dom-if" if="[[currentRunningService.service]]">
+				<paper-button raised class="indigo" on-click="payToService">Make payment</paper-button>
+			</template>
 			<template is="dom-if" if="[[mainErrorMessage]]">
 				<span class="error-validation">{{mainErrorMessage}}</span>
 			</template>
@@ -100,8 +98,8 @@ class MyPayment extends PolymerElement {
 				// checks the user is logged in user from array and updates wallet balance to that user
 				if(user.email === this.loggedInUserDetails.email) {
 					user.wallet.balance = parseInt(amount);
-					this.loggedInUserDetails.wallet.balance = user.wallet.balance;	// updates user at my-app.js
-					this.notifyPath('loggedInUserDetails.wallet.balance');
+					// this.loggedInUserDetails.wallet.balance = user.wallet.balance;	// updates user at my-app.js
+					// this.notifyPath('loggedInUserDetails.wallet.balance');
 				}
 				return user;
 			});
@@ -121,13 +119,14 @@ class MyPayment extends PolymerElement {
 	payToService() {
 		// reset error messages:
 		this.mainErrorMessage = '';
-		
+		/*
 		if(parseInt(this.currentRunningService.amount) <= this.loggedInUserDetails.wallet.balance) {
-			  // this.paymentService.payToService(this.currentRunningService);
+			  
 		  } else {
 			  this.mainErrorMessage = 'Insufficient balance. Please add amount to wallet';
 			  return false;
 		  }
+		  */
 		  
 		/*
 		amount, service, provider, userId, serviceUniqueId
@@ -153,14 +152,10 @@ class MyPayment extends PolymerElement {
 			 
 			// console.log("Payment done");
 			this.currentRunningService = {}; // clear currentRunningService data after payment
-			// this.openSnackBar("Payment successful", "success");
-			// this.router.navigate(['dashboard']);
 			// continue to dashboard page
 			this.set('route.path', '/dashboard');
 		} else {
-			this.mainErrorMessage = "Please add money to wallet";
-			// this.openSnackBar("Please add money to wallet", "");
-			// console.log("Payment not done, please add money to wallet");
+			this.mainErrorMessage = "Insufficient balance. Please add amount to wallet";
 		}
 	}
 	
