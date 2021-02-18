@@ -7,6 +7,10 @@
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
+ 
+ /**
+ * appConfig variable - set static data. Contains static users list, services, transactions data at application is loaded.
+ */
 var appConfig = {
 	"appTitle": "Services System",
 	"appHeaderName": "Payment Services",
@@ -195,7 +199,7 @@ class MyApp extends PolymerElement {
       <app-drawer-layout fullbleed="" narrow="{{narrow}}">
         <!-- Drawer content -->
         <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
-          <app-toolbar>Payment Services</app-toolbar>
+          <app-toolbar>{{appConfig.appTitle}}</app-toolbar>
           <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
             <template is="dom-if" if="[[!loggedInUserDetails.email]]">
 				<a name="login" href="[[rootPath]]login">Login</a>
@@ -231,7 +235,7 @@ class MyApp extends PolymerElement {
           <app-header slot="header" condenses="" reveals="" effects="waterfall">
             <app-toolbar>
               <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
-              <div main-title="">Payment Services</div>
+              <div main-title="">{{appConfig.appHeaderName}}</div>
             </app-toolbar>
           </app-header>
 
